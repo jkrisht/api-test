@@ -1,4 +1,4 @@
-package com.experian;
+package com.experian.tests;
 
 import com.experian.controllers.AlbumsApiController;
 import com.experian.controllers.PhotosApiController;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ExperianTests {
 
-    protected ThreadLocal<RequestSpecification> requestSpec = new ThreadLocal<RequestSpecification>();
+    protected ThreadLocal<RequestSpecification> requestSpec = new ThreadLocal<>();
 
     /**
      * Verify the response code
@@ -25,9 +25,8 @@ public class ExperianTests {
      * @param expectedCode
      */
     public void validateResponse(Response response, int expectedCode) {
-        Assert.assertTrue(response.getStatusCode() == expectedCode,
-                "Incorrect status code is received. Expected: " + expectedCode + ", "
-                        + response.getStatusCode());
+        Assert.assertEquals(response.getStatusCode(), expectedCode,
+                "Incorrect status code is received. Expected: " + expectedCode + ", " + response.getStatusCode());
     }
 
     /**
@@ -74,7 +73,8 @@ public class ExperianTests {
     public void validateUserOwnsAlbum(Response response, int userId, int albumId) {
         JSONArray userRes = JsonPath.parse(response.asString()).read("$.[?(@.userId == " + userId + ")]");
         JSONArray albumIds = JsonPath.parse(response.asString()).read("$.[?(@.id == " + albumId + ")]");
-        Assert.assertEquals(1, albumIds.size(), "User " + userId + " doesn't own " + albumId + " album.");
+        Assert.assertEquals(1, albumIds.size(),
+                "User " + userId + " doesn't own " + albumId + " album.");
     }
 
     /**
@@ -86,7 +86,8 @@ public class ExperianTests {
      */
     public void validatePhotosResponse(Response response, int albumId, int expected) {
         JSONArray albumIds = JsonPath.parse(response.asString()).read("$.[?(@.albumId == " + albumId + ")]");
-        Assert.assertEquals(expected, albumIds.size(), "Album ");
+        Assert.assertEquals(expected, albumIds.size(),
+                "Album " + albumId + " doesn't have " + expected + " photos.");
     }
 
     @BeforeClass
